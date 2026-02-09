@@ -1,0 +1,68 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtualenv / Poetry / venv
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# =========================
+# Build / dist
+# =========================
+build/
+dist/
+*.egg-info/
+
+# =========================
+# ML / Data
+# =========================
+dataset/
+*.wav
+*.mp3
+*.npy
+*.npz
+*.pkl
+*.joblib
+*.h5
+
+# =========================
+# Logs / caches
+# =========================
+*.log
+.cache/
+.ipynb_checkpoints/
+
+# =========================
+# IDE / OS
+# =========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =========================
+# API / Front
+# =========================
+api/static/*.map
+api/static/node_modules/
+
+# =========================
+# Test / Coverage
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# Secrets
+# =========================
+.env
+*.env
