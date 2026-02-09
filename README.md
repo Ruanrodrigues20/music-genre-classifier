@@ -25,7 +25,18 @@ Trabalho desenvolvido na disciplina de **Inteligência Artificial** — **UFCG �
 ## ⚙️ Requisitos
 
 * `ffmpeg` instalado
+    
+    ```bash
+    sudo apt install ffmpeg -y # Base Debian
+    sudo dnf install ffmpeg -y # Base Fedora
+    ```
+
 * `uv` instalado
+
+    ```bash
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+
 * Python **3.12.x**
 * Dataset disponível (caso a MLP ainda não tenha sido treinada)
 
