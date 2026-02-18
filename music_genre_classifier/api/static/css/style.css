@@ -1,0 +1,205 @@
+:root {
+    --bg: #0f1115;
+    --card: #171a21;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --primary: #22c55e;
+    --accent: #f97316;
+    --border: #262a33;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+}
+
+/* ================= NAV ================= */
+
+nav {
+    background: #111318;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--muted);
+    margin-left: 25px;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: var(--primary);
+}
+
+/* ================= CONTAINER ================= */
+
+.container {
+    max-width: 1100px;
+    /* aumentado para desktop */
+    margin: auto;
+    padding: 70px 8%;
+}
+
+/* ================= ARTICLE ================= */
+
+.article {
+    background: var(--card);
+    padding: 60px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    margin-bottom: 50px;
+}
+
+h2 {
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    margin-top: 45px;
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: var(--primary);
+}
+
+p {
+    margin-bottom: 15px;
+    color: var(--muted);
+}
+
+/* ================= IMAGES (Mobile First) ================= */
+
+.article img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 25px 0;
+}
+
+/* ================= METRICS GRID ================= */
+
+.metrics-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* ================= UPLOAD AREA ================= */
+
+.upload-box {
+    margin-top: 30px;
+    border: 2px dashed var(--primary);
+    padding: 50px;
+    text-align: center;
+    border-radius: 14px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.upload-box.dragover {
+    background: rgba(34, 197, 94, 0.08);
+}
+
+.upload-box input {
+    display: none;
+}
+
+.file-name {
+    margin-top: 15px;
+    font-size: 14px;
+    color: var(--primary);
+}
+
+button {
+    margin-top: 25px;
+    padding: 12px 35px;
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+#result {
+    margin-top: 20px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .article {
+        padding: 35px;
+    }
+
+    .container {
+        padding: 40px 6%;
+    }
+}
+
+/* ================= DESKTOP ================= */
+
+@media (min-width: 1280px) {
+
+    .container {
+        max-width: 1300px;
+    }
+
+    .article {
+        padding: 80px;
+    }
+
+    .article img {
+        width: 100%;
+        max-width: 1100px;
+        /* imagem grande mas controlada */
+        display: block;
+        margin: 40px auto;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 50px;
+    }
+}

@@ -1,0 +1,144 @@
+{% extends "base/base.html" %}
+
+{% block title %}Sobre | Music Genre Classifier{% endblock %}
+
+{% block content %}
+
+<main>
+
+    <article class="article">
+
+        <!-- HERO -->
+        <header class="hero">
+            <h2>Music Genre Classifier</h2>
+            <p class="meta">
+                Projeto desenvolvido na disciplina de
+                <strong>Inteligência Artificial</strong> —
+                <strong>UFCG · 2025.2</strong>
+            </p>
+            <p class="hero-description">
+                Um sistema completo de classificação de gêneros musicais
+                utilizando técnicas de <strong>Machine Learning</strong>,
+                com pipeline própria de dados e integração web.
+            </p>
+        </header>
+
+        <!-- CONTEXTO -->
+        <section>
+            <h3>📚 Contexto do Projeto</h3>
+            <p>
+                O objetivo deste trabalho foi aplicar técnicas de aprendizado supervisionado
+                para resolver um problema real: <strong>identificar automaticamente o gênero musical
+                    de uma faixa de áudio</strong>.
+            </p>
+            <p>
+                A pipeline foi construída do zero, incluindo coleta de dados,
+                pré-processamento, engenharia de features, treinamento,
+                avaliação e deploy do modelo.
+            </p>
+        </section>
+
+        <!-- DATASET -->
+        <section>
+            <h3>🎧 Construção do Dataset</h3>
+            <p>
+                Ao invés de utilizar bases tradicionais como GTZAN, optamos por
+                construir um dataset próprio, coletando manualmente músicas
+                de diferentes gêneros.
+            </p>
+            <p>
+                Cada faixa passou por:
+            </p>
+            <ul>
+                <li>Padronização de duração</li>
+                <li>Conversão de formato</li>
+                <li>Normalização do sinal</li>
+                <li>Organização estruturada por classe</li>
+            </ul>
+        </section>
+
+        <!-- FEATURES -->
+        <section>
+            <h3>🔎 Extração de Features</h3>
+            <p>
+                Utilizamos a biblioteca <strong>Librosa</strong> para extrair
+                características representativas do domínio espectral e temporal.
+            </p>
+
+            <div class="metrics-grid">
+                <div>
+                    <ul>
+                        <li>MFCC</li>
+                        <li>Chroma Features</li>
+                        <li>Spectral Centroid</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <ul>
+                        <li>Spectral Bandwidth</li>
+                        <li>Zero Crossing Rate</li>
+                        <li>RMS Energy</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODELO -->
+        <section>
+            <h3>🧠 Modelo de Machine Learning</h3>
+            <p>
+                Foi utilizada uma <strong>MLP (Multi-Layer Perceptron)</strong>
+                implementada com <strong>Scikit-learn</strong>,
+                avaliando desempenho através de múltiplas métricas.
+            </p>
+
+            <div class="metrics-grid">
+                <div>
+                    <ul>
+                        <li>Accuracy</li>
+                        <li>Precision</li>
+                        <li>Recall</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul>
+                        <li>F1-score</li>
+                        <li>Matriz de Confusão</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTEGRAÇÃO -->
+        <section>
+            <h3>🌐 Integração Web</h3>
+            <p>
+                O modelo treinado foi integrado a uma aplicação web,
+                permitindo que usuários façam upload de arquivos de áudio
+                e obtenham predições em tempo real.
+            </p>
+            <p>
+                A aplicação conecta frontend, backend e modelo treinado
+                de forma modular e escalável.
+            </p>
+        </section>
+
+        <!-- CONTRIBUIDORES -->
+        <section>
+            <h3>👥 Equipe</h3>
+
+            <div class="team-grid">
+                <a href="https://github.com/arthur-vasco7" target="_blank" class="team-card">Arthur</a>
+                <a href="https://github.com/CarlosArturr" target="_blank" class="team-card">Carlos Artur</a>
+                <a href="https://github.com/DeboraSabrinaOPereira" target="_blank" class="team-card">Débora Pereira</a>
+                <a href="https://github.com/rafaelmcavalcante" target="_blank" class="team-card">Rafael Cavalcante</a>
+                <a href="https://github.com/ruanrodrigues20" target="_blank" class="team-card">Ruan Rodrigues</a>
+            </div>
+        </section>
+
+    </article>
+
+</main>
+
+{% endblock %}

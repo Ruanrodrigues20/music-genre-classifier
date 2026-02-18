@@ -1,16 +1,25 @@
 [project]
 name = "music-genre-classifier"
 version = "0.1.0"
-description = "Add your description here"
+description = "classifier music genre (Forro, Pop, Classica, Eletronica, Rock)"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.128.5",
     "jinja2>=3.1.6",
     "librosa>=0.11.0",
+    "matplotlib>=3.10.8",
     "numpy>=2.3.5",
+    "pandas>=3.0.0",
     "pydantic>=2.12.5",
     "python-multipart>=0.0.22",
     "soundfile>=0.13.1",
     "uvicorn>=0.40.0",
 ]
+
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
