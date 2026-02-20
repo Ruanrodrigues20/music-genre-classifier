@@ -1,10 +1,18 @@
+import io
+from pathlib import Path
 from typing import List
 
+import librosa
 import numpy as np
 
 from music_genre_classifier.models import AudioSample, GenreType
-from music_genre_classifier.configs import get_logger, DATASET_DIR
-from music_genre_classifier.data.audio_loader import AudioLoader
+from music_genre_classifier.configs import (
+    get_logger,
+    DATASET_DIR,
+    SAMPLE_RATE,
+    NUM_SEGMENTS,
+    SEGMENT_DURATION,
+)
 from music_genre_classifier.data.feature_extractor import FeatureExtractor
 
 logger = get_logger(__name__)
@@ -12,44 +20,81 @@ logger = get_logger(__name__)
 
 class MusicsLoader:
     @staticmethod
-    def load_dataset_train() -> List[AudioSample]:
-        logger.info(DATASET_DIR)
-        return MusicsLoader.__load_dataset("train")
+    def load_dataset(split: str) -> List[AudioSample]:
+        if split not in {"train", "test"}:
+            raise ValueError("split must be 'train' or 'test'")
 
-    @staticmethod
-    def load_dataset_test() -> List[AudioSample]:
-        return MusicsLoader.__load_dataset("test")
-
-    @staticmethod
-    def __load_dataset(split: str) -> List[AudioSample]:
-        if not split:
-            raise ValueError("Split cannot be empty")
+        logger.info("📂 Loading dataset [%s]", split)
 
         samples: List[AudioSample] = []
-        logger.info(f"📂 Loading dataset [{split}]")
 
         for genre in GenreType:
             genre_dir = DATASET_DIR / genre.value / split
 
             if not genre_dir.exists():
-                logger.warning(f"⚠️ Directory not found: {genre_dir}")
+                logger.warning("⚠️ Directory not found: %s", genre_dir)
                 continue
 
-            for audio_file in genre_dir.glob("*.wav"):
-                logger.debug(f"🎵 Processing: {audio_file.name}")
+            samples.extend(MusicsLoader._load_genre_dir(genre_dir, genre))
 
-                y, sr = AudioLoader.from_path(audio_file)
+        logger.info("Total [%s]: %d samples", split, len(samples))
+        return samples
+
+    @staticmethod
+    def _load_genre_dir(genre_dir: Path, genre: GenreType) -> List[AudioSample]:
+        samples: List[AudioSample] = []
+
+        for audio_file in genre_dir.glob("*.wav"):
+            logger.debug("🎵 Processing: %s", audio_file.name)
+
+            try:
+                y, sr = librosa.load(str(audio_file), sr=SAMPLE_RATE, mono=True)
                 features = FeatureExtractor.extract(y, sr)
 
                 if features is None:
-                    logger.error(f"Feature is None {audio_file}")
+                    logger.warning("⚠️ Feature is None: %s", audio_file)
+                    continue
 
                 label = GenreType.to_label(genre)
                 samples.append(AudioSample(features, label))
 
-        logger.info(f"Total [{split}]: {len(samples)} samples")
+            except Exception as e:
+                logger.error("❌ Failed processing %s: %s", audio_file, e)
+
         return samples
 
-    def load_audio(audio: bytes) -> np.ndarray | None:
-        y, sr = AudioLoader.from_bytes(audio)
-        return FeatureExtractor.extract(y, sr)
+    @staticmethod
+    def load_audio(audio_bytes: bytes) -> np.ndarray | None:
+        try:
+            y, sr = librosa.load(io.BytesIO(audio_bytes), sr=SAMPLE_RATE, mono=True)
+
+            min_duration = SEGMENT_DURATION * NUM_SEGMENTS
+            duration = librosa.get_duration(y=y, sr=sr)
+
+            if duration < min_duration:
+                logger.warning("⚠️ Audio too short: %.2fs", duration)
+                return None
+
+            segment_samples = int(SEGMENT_DURATION * sr)
+
+            starts_sec = [
+                0,
+                duration * 0.25,
+                duration * 0.50,
+                duration * 0.75,
+                duration - SEGMENT_DURATION,
+            ]
+
+            segments = []
+            for start_sec in starts_sec:
+                start_sample = int(start_sec * sr)
+                end_sample = start_sample + segment_samples
+                segments.append(y[start_sample:end_sample])
+
+            full_audio = np.concatenate(segments)
+
+            return full_audio
+
+        except Exception as e:
+            logger.error("❌ Failed loading audio from bytes: %s", e)
+            return None

@@ -2,14 +2,14 @@ import time
 import librosa
 import numpy as np
 
-from music_genre_classifier.configs import get_logger
+from music_genre_classifier.configs import get_logger, SAMPLE_RATE
 
 logger = get_logger(__name__)
 
 
 class FeatureExtractor:
     @staticmethod
-    def extract(y: np.ndarray, sr: int) -> np.ndarray | None:
+    def extract(y: np.ndarray, sr: int = SAMPLE_RATE) -> np.ndarray | None:
         start = time.time()
 
         if y is None or len(y) < sr:

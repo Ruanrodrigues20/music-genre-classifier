@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from music_genre_classifier.data import MusicsLoader, DatasetBuilder, Preprocess
+from music_genre_classifier.data import MusicsLoader, DatasetBuilder, FeatureExtractor
+from music_genre_classifier.utils import Preprocess
 from music_genre_classifier.mlp import (
     MLPClassifier,
     ClassificationMetrics,
@@ -32,7 +33,8 @@ class MlpService:
         self.model.save(MODEL_PATH)
 
     def predict_genre(self, audio_bytes: bytes) -> str:
-        features = MusicsLoader.load_audio(audio_bytes)
+        full_audio = MusicsLoader.load_audio(audio_bytes)
+        features = FeatureExtractor.extract(full_audio)
         label = self.model.predict(features)
         return GenreType.get_name(label)
 
@@ -44,8 +46,8 @@ class MlpService:
 
     def __extract_and_save_datasets(self) -> None:
         if not TRAIN_CSV.exists() or not TEST_CSV.exists():
-            train_samples = MusicsLoader.load_dataset_train()
-            test_samples = MusicsLoader.load_dataset_test()
+            train_samples = MusicsLoader.load_dataset("train")
+            test_samples = MusicsLoader.load_dataset("test")
             print(test_samples)
             DatasetBuilder.save_to_csv(train_samples, TRAIN_CSV)
             DatasetBuilder.save_to_csv(test_samples, TEST_CSV)

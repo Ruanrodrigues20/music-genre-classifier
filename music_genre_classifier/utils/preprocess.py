@@ -6,17 +6,18 @@ import librosa
 import numpy as np
 import soundfile as sf
 
-from music_genre_classifier.models import GenreType
-from music_genre_classifier.configs import get_logger, DATASET_DIR
+from music_genre_classifier.configs import (
+    get_logger,
+    DATASET_DIR,
+    SAMPLE_RATE,
+    NUM_SEGMENTS,
+    SEGMENT_DURATION,
+)
 
 logger = get_logger(__name__)
 
 
 class Preprocess:
-    SEGMENT_DURATION = 6
-    NUM_SEGMENTS = 5
-    SAMPLE_RATE = 22050
-
     def __init__(self, genre: str):
         self.genre = genre
         self.music_dir = Path(DATASET_DIR) / self.genre
@@ -60,21 +61,21 @@ class Preprocess:
         else:
             logger.info("Converting MP3 to WAV and extracting 30s: %s", audio_path)
 
-        y, sr = librosa.load(str(audio_path), sr=self.SAMPLE_RATE, mono=True)
+        y, sr = librosa.load(str(audio_path), sr=SAMPLE_RATE, mono=True)
         duration = librosa.get_duration(y=y, sr=sr)
 
-        min_duration = self.SEGMENT_DURATION * self.NUM_SEGMENTS
+        min_duration = SEGMENT_DURATION * NUM_SEGMENTS
         if duration < min_duration:
             logger.warning("Skipping %s (too short)", audio_path)
             return
 
-        segment_samples = int(self.SEGMENT_DURATION * sr)
+        segment_samples = int(SEGMENT_DURATION * sr)
         starts_sec = [
             0,
             duration * 0.25,
             duration * 0.50,
             duration * 0.75,
-            duration - self.SEGMENT_DURATION,
+            duration - SEGMENT_DURATION,
         ]
 
         segments = []
