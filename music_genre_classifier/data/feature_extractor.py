@@ -8,6 +8,8 @@ logger = get_logger(__name__)
 
 
 class FeatureExtractor:
+    N_MFCC = 20
+
     @staticmethod
     def extract(y: np.ndarray, sr: int = SAMPLE_RATE) -> np.ndarray | None:
         start = time.time()
@@ -17,37 +19,31 @@ class FeatureExtractor:
             return None
 
         try:
-            mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=20)
+            mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=FeatureExtractor.N_MFCC)
             mfcc_delta = librosa.feature.delta(mfcc)
             mfcc_delta2 = librosa.feature.delta(mfcc, order=2)
 
             chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-            spec_centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
-            spec_bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
-            spec_rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
+            centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
+            bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
+            rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
             zcr = librosa.feature.zero_crossing_rate(y)
             rms = librosa.feature.rms(y=y)
 
+            def stats(x):
+                return [x.mean(axis=1), x.var(axis=1)]
+
             features = np.hstack(
                 [
-                    mfcc.mean(axis=1),
-                    mfcc.var(axis=1),
-                    mfcc_delta.mean(axis=1),
-                    mfcc_delta.var(axis=1),
-                    mfcc_delta2.mean(axis=1),
-                    mfcc_delta2.var(axis=1),
-                    chroma.mean(axis=1),
-                    chroma.var(axis=1),
-                    spec_centroid.mean(axis=1),
-                    spec_centroid.var(axis=1),
-                    spec_bandwidth.mean(axis=1),
-                    spec_bandwidth.var(axis=1),
-                    spec_rolloff.mean(axis=1),
-                    spec_rolloff.var(axis=1),
-                    zcr.mean(axis=1),
-                    zcr.var(axis=1),
-                    rms.mean(axis=1),
-                    rms.var(axis=1),
+                    *stats(mfcc),
+                    *stats(mfcc_delta),
+                    *stats(mfcc_delta2),
+                    *stats(chroma),
+                    *stats(centroid),
+                    *stats(bandwidth),
+                    *stats(rolloff),
+                    *stats(zcr),
+                    *stats(rms),
                 ]
             )
 
@@ -60,31 +56,17 @@ class FeatureExtractor:
 
     @staticmethod
     def get_feature_names():
+        def stat_names(prefix, n):
+            return [f"{prefix}_{i}_mean" for i in range(n)] + [
+                f"{prefix}_{i}_var" for i in range(n)
+            ]
+
         names = []
+        names += stat_names("mfcc", 20)
+        names += stat_names("mfcc_delta", 20)
+        names += stat_names("mfcc_delta2", 20)
+        names += stat_names("chroma", 12)
 
-        # MFCC (20)
-        for i in range(20):
-            names.append(f"mfcc_{i}_mean")
-        for i in range(20):
-            names.append(f"mfcc_{i}_var")
-
-        for i in range(20):
-            names.append(f"mfcc_delta_{i}_mean")
-        for i in range(20):
-            names.append(f"mfcc_delta_{i}_var")
-
-        for i in range(20):
-            names.append(f"mfcc_delta2_{i}_mean")
-        for i in range(20):
-            names.append(f"mfcc_delta2_{i}_var")
-
-        # Chroma (12)
-        for i in range(12):
-            names.append(f"chroma_{i}_mean")
-        for i in range(12):
-            names.append(f"chroma_{i}_var")
-
-        # Spectral features
         names += [
             "spec_centroid_mean",
             "spec_centroid_var",
