@@ -23,7 +23,7 @@ class AudioLoader:
     @staticmethod
     def load_dataset() -> List[AudioSample]:
 
-        logger.info("📂 Loading dataset [%s]")
+        logger.info("📂 Loading dataset")
 
         samples: List[AudioSample] = []
 
