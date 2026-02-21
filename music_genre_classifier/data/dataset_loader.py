@@ -4,15 +4,15 @@ import pandas as pd
 from pathlib import Path
 
 from music_genre_classifier.models import AudioSample, GenreType
-from music_genre_classifier.configs import get_logger
+from music_genre_classifier.configs import get_logger, DATASET_CSV
 from music_genre_classifier.data.feature_extractor import FeatureExtractor
 
 logger = get_logger(__name__)
 
 
-class DatasetBuilder:
+class DataSetLoader:
     @staticmethod
-    def save_to_csv(samples: list[AudioSample], file_path: Path):
+    def save_to_csv(samples: list[AudioSample], file_path: Path = DATASET_CSV):
         if not samples:
             logger.error("No samples to save")
             return
@@ -37,7 +37,7 @@ class DatasetBuilder:
         logger.info(f"✅ CSV write: {file_path}")
 
     @staticmethod
-    def load_from_csv(file_path: Path):
+    def load_from_csv(file_path: Path = DATASET_CSV):
         df = pd.read_csv(file_path)
 
         # remove colunas que não são features

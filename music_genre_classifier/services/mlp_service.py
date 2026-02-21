@@ -4,14 +4,14 @@ from sklearn.model_selection import train_test_split
 import json
 
 
-from music_genre_classifier.data import MusicsLoader, DatasetBuilder, FeatureExtractor
+from music_genre_classifier.data import AudioLoader, DataSetLoader, FeatureExtractor
 from music_genre_classifier.utils import Preprocess
 from music_genre_classifier.mlp import (
     MLPClassifier,
     ClassificationMetrics,
     ClassificationVisualizer,
 )
-from music_genre_classifier.configs import DATASET_CSV, MODEL_PATH, DATA_DIR
+from music_genre_classifier.configs import MODEL_PATH, MODEL_CONFIG, DATASET_CSV
 from music_genre_classifier.models import GenreType, MLPConfig
 
 
@@ -26,9 +26,11 @@ class MlpService:
             Preprocess(genre).run()
 
     def train(self) -> None:
-        self.__extract_and_save_datasets()
+        if not DATASET_CSV.exists():
+            data_samples = AudioLoader.load_dataset()
+            DataSetLoader.save_to_csv(data_samples)
 
-        X, y = self.__load_csv(DATASET_CSV)
+        X, y = DataSetLoader.load_from_csv()
 
         X_train, X_test, y_train, y_test = train_test_split(
             X,
@@ -46,23 +48,19 @@ class MlpService:
         self.model.save(MODEL_PATH)
 
     def predict_genre(self, audio_bytes: bytes) -> str:
-        full_audio = MusicsLoader.load_audio(audio_bytes)
+        full_audio = AudioLoader.load_audio(audio_bytes)
         features = FeatureExtractor.extract(full_audio)
         label = self.model.predict(features)
         return GenreType(label).name.lower()
 
     def __get_config(self) -> MLPConfig:
-        with open(DATA_DIR / "model_config.json") as f:
+        if not MODEL_CONFIG.exists():
+            return MLPConfig()
+
+        with open(MODEL_CONFIG) as f:
             data = json.load(f)
+
         return MLPConfig(**data)
-
-    def __load_csv(self, csv_path: Path):
-        return DatasetBuilder.load_from_csv(csv_path)
-
-    def __extract_and_save_datasets(self) -> None:
-        if not DATASET_CSV.exists():
-            data_samples = MusicsLoader.load_dataset()
-            DatasetBuilder.save_to_csv(data_samples, DATASET_CSV)
 
     def __evaluate_and_save(self, X_test, y_test):
         y_pred = self.model.predict_batch(X_test)

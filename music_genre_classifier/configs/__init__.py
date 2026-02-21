@@ -5,6 +5,7 @@ from music_genre_classifier.configs.path import (
     MODEL_PATH,
     DATA_DIR,
     RESULTS_DIR,
+    MODEL_CONFIG,
 )
 from music_genre_classifier.configs.musics import (
     SAMPLE_RATE,
@@ -22,4 +23,5 @@ __all__ = [
     "RESULTS_DIR",
     "NUM_SEGMENTS",
     "SEGMENT_DURATION",
+    "MODEL_CONFIG",
 ]

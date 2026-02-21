@@ -19,7 +19,7 @@ from music_genre_classifier.utils import extract_number
 logger = get_logger(__name__)
 
 
-class MusicsLoader:
+class AudioLoader:
     @staticmethod
     def load_dataset() -> List[AudioSample]:
 
@@ -37,7 +37,7 @@ class MusicsLoader:
                 logger.warning("⚠️ Directory not found: %s", genre_dir)
                 continue
 
-            samples.extend(MusicsLoader._load_genre_dir(genre_dir, genre))
+            samples.extend(AudioLoader._load_genre_dir(genre_dir, genre))
 
         logger.info("Total [%s]: samples", len(samples))
         return samples
