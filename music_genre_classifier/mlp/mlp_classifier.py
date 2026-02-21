@@ -32,8 +32,6 @@ class MLPClassifier:
     def train(self, X_train, y_train):
         X_train = self.scaler.fit_transform(X_train)
         self.model.fit(X_train, y_train)
-        print("LOSS", self.model.loss_curve_)
-        print("VALIDATION SCORE", self.model.validation_scores_)
 
     def evaluate(self, X_test, y_test):
         X_test = self.scaler.transform(X_test)

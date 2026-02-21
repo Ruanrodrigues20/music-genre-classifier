@@ -57,3 +57,45 @@ class FeatureExtractor:
         except Exception as e:
             logger.error(f"❌ Erro in extractor features: {e}")
             return None
+
+    @staticmethod
+    def get_feature_names():
+        names = []
+
+        # MFCC (20)
+        for i in range(20):
+            names.append(f"mfcc_{i}_mean")
+        for i in range(20):
+            names.append(f"mfcc_{i}_var")
+
+        for i in range(20):
+            names.append(f"mfcc_delta_{i}_mean")
+        for i in range(20):
+            names.append(f"mfcc_delta_{i}_var")
+
+        for i in range(20):
+            names.append(f"mfcc_delta2_{i}_mean")
+        for i in range(20):
+            names.append(f"mfcc_delta2_{i}_var")
+
+        # Chroma (12)
+        for i in range(12):
+            names.append(f"chroma_{i}_mean")
+        for i in range(12):
+            names.append(f"chroma_{i}_var")
+
+        # Spectral features
+        names += [
+            "spec_centroid_mean",
+            "spec_centroid_var",
+            "spec_bandwidth_mean",
+            "spec_bandwidth_var",
+            "spec_rolloff_mean",
+            "spec_rolloff_var",
+            "zcr_mean",
+            "zcr_var",
+            "rms_mean",
+            "rms_var",
+        ]
+
+        return names

@@ -14,22 +14,24 @@ from music_genre_classifier.configs import (
     SEGMENT_DURATION,
 )
 from music_genre_classifier.data.feature_extractor import FeatureExtractor
+from music_genre_classifier.utils import extract_number
 
 logger = get_logger(__name__)
 
 
 class MusicsLoader:
     @staticmethod
-    def load_dataset(split: str) -> List[AudioSample]:
-        if split not in {"train", "test"}:
-            raise ValueError("split must be 'train' or 'test'")
+    def load_dataset() -> List[AudioSample]:
 
-        logger.info("📂 Loading dataset [%s]", split)
+        logger.info("📂 Loading dataset [%s]")
 
         samples: List[AudioSample] = []
 
         for genre in GenreType:
-            genre_dir = DATASET_DIR / genre.value / split
+            genre_name = GenreType.get_name(genre)
+            genre_dir = DATASET_DIR / genre_name
+
+            logger.info("📂 Loading [%s]", genre_name)
 
             if not genre_dir.exists():
                 logger.warning("⚠️ Directory not found: %s", genre_dir)
@@ -37,14 +39,14 @@ class MusicsLoader:
 
             samples.extend(MusicsLoader._load_genre_dir(genre_dir, genre))
 
-        logger.info("Total [%s]: %d samples", split, len(samples))
+        logger.info("Total [%s]: samples", len(samples))
         return samples
 
     @staticmethod
     def _load_genre_dir(genre_dir: Path, genre: GenreType) -> List[AudioSample]:
         samples: List[AudioSample] = []
 
-        for audio_file in genre_dir.glob("*.wav"):
+        for audio_file in sorted(genre_dir.glob("*.wav"), key=extract_number):
             logger.debug("🎵 Processing: %s", audio_file.name)
 
             try:
@@ -55,8 +57,12 @@ class MusicsLoader:
                     logger.warning("⚠️ Feature is None: %s", audio_file)
                     continue
 
-                label = GenreType.to_label(genre)
-                samples.append(AudioSample(features, label))
+                label = genre
+                samples.append(
+                    AudioSample(
+                        filename=audio_file.name, features=features, label=label
+                    )
+                )
 
             except Exception as e:
                 logger.error("❌ Failed processing %s: %s", audio_file, e)

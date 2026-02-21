@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from sklearn.model_selection import train_test_split
+
 from music_genre_classifier.data import MusicsLoader, DatasetBuilder, FeatureExtractor
 from music_genre_classifier.utils import Preprocess
 from music_genre_classifier.mlp import (
@@ -7,7 +9,7 @@ from music_genre_classifier.mlp import (
     ClassificationMetrics,
     ClassificationVisualizer,
 )
-from music_genre_classifier.configs import TRAIN_CSV, TEST_CSV, MODEL_PATH
+from music_genre_classifier.configs import DATASET_CSV, MODEL_PATH
 from music_genre_classifier.models import GenreType, MLPConfig
 
 
@@ -15,7 +17,7 @@ class MlpService:
     def __init__(self):
         self.config = self.__get_config()
         self.model = MLPClassifier.load(MODEL_PATH) if MODEL_PATH.exists() else None
-        self.genre_list = [genre.name for genre in GenreType]
+        self.genre_list = [GenreType.get_name(g) for g in GenreType]
 
     def preprocess(self) -> None:
         for genre in self.genre_list:
@@ -23,8 +25,17 @@ class MlpService:
 
     def train(self) -> None:
         self.__extract_and_save_datasets()
-        X_train, y_train = self.__load_csv(TRAIN_CSV)
-        X_test, y_test = self.__load_csv(TEST_CSV)
+
+        X, y = self.__load_csv(DATASET_CSV)
+
+        X_train, X_test, y_train, y_test = train_test_split(
+            X,
+            y,
+            test_size=0.3,
+            random_state=42,
+            shuffle=True,
+            stratify=y,
+        )
 
         self.model = MLPClassifier(config=self.config)
         self.model.train(X_train, y_train)
@@ -36,7 +47,7 @@ class MlpService:
         full_audio = MusicsLoader.load_audio(audio_bytes)
         features = FeatureExtractor.extract(full_audio)
         label = self.model.predict(features)
-        return GenreType.get_name(label)
+        return GenreType(label).name.lower()
 
     def __get_config(self) -> MLPConfig:
         return MLPConfig()
@@ -45,12 +56,9 @@ class MlpService:
         return DatasetBuilder.load_from_csv(csv_path)
 
     def __extract_and_save_datasets(self) -> None:
-        if not TRAIN_CSV.exists() or not TEST_CSV.exists():
-            train_samples = MusicsLoader.load_dataset("train")
-            test_samples = MusicsLoader.load_dataset("test")
-            print(test_samples)
-            DatasetBuilder.save_to_csv(train_samples, TRAIN_CSV)
-            DatasetBuilder.save_to_csv(test_samples, TEST_CSV)
+        if not DATASET_CSV.exists():
+            data_samples = MusicsLoader.load_dataset()
+            DatasetBuilder.save_to_csv(data_samples, DATASET_CSV)
 
     def __evaluate_and_save(self, X_test, y_test):
         y_pred = self.model.predict_batch(X_test)
