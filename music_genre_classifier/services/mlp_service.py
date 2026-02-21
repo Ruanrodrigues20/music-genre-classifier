@@ -1,6 +1,8 @@
 from pathlib import Path
 
 from sklearn.model_selection import train_test_split
+import json
+
 
 from music_genre_classifier.data import MusicsLoader, DatasetBuilder, FeatureExtractor
 from music_genre_classifier.utils import Preprocess
@@ -9,7 +11,7 @@ from music_genre_classifier.mlp import (
     ClassificationMetrics,
     ClassificationVisualizer,
 )
-from music_genre_classifier.configs import DATASET_CSV, MODEL_PATH
+from music_genre_classifier.configs import DATASET_CSV, MODEL_PATH, DATA_DIR
 from music_genre_classifier.models import GenreType, MLPConfig
 
 
@@ -31,7 +33,7 @@ class MlpService:
         X_train, X_test, y_train, y_test = train_test_split(
             X,
             y,
-            test_size=0.3,
+            test_size=0.25,
             random_state=42,
             shuffle=True,
             stratify=y,
@@ -50,7 +52,9 @@ class MlpService:
         return GenreType(label).name.lower()
 
     def __get_config(self) -> MLPConfig:
-        return MLPConfig()
+        with open(DATA_DIR / "model_config.json") as f:
+            data = json.load(f)
+        return MLPConfig(**data)
 
     def __load_csv(self, csv_path: Path):
         return DatasetBuilder.load_from_csv(csv_path)
