@@ -141,7 +141,7 @@ uv sync
 ### 2 - Pré-processar o dataset (somente se ainda não tiver feito)
 
 ```bash
-python -m music_genre_classifier.data.preprocess
+python -m music_genre_classifier.utils.preprocess
 ```
 
 ### 3 - Treinar a MLP
