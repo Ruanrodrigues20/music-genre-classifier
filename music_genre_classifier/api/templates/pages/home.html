@@ -4,10 +4,32 @@
 
 {% block content %}
 <div class="container">
-    <h2>Bem-vindo ao Music Genre Classifier</h2>
+  <div class="article">
+
+    <h2>Music Genre Classifier</h2>
+
     <p>
-        Classifique automaticamente gêneros musicais utilizando
-        uma MLP treinada com features extraídas via Librosa.
+      Sistema de classificação automática de gêneros musicais baseado em 
+      <strong>Machine Learning</strong>.
     </p>
+
+    <p>
+      O modelo foi treinado com uma <strong>MLP (Multi-Layer Perceptron)</strong> 
+      utilizando features acústicas extraídas com <strong>Librosa</strong>, 
+      incluindo características de timbre, ritmo, harmonia e energia.
+    </p>
+
+    <p>
+      A aplicação permite que você envie um arquivo de áudio e receba 
+      instantaneamente a previsão do gênero musical.
+    </p>
+
+    <div style="margin-top: 30px;">
+      <a href="/inference">
+        <button>Testar Classificação</button>
+      </a>
+    </div>
+
+  </div>
 </div>
 {% endblock %}

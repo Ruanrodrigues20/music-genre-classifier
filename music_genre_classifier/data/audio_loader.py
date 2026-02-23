@@ -47,7 +47,7 @@ class AudioLoader:
         samples: List[AudioSample] = []
 
         for audio_file in sorted(genre_dir.glob("*.wav"), key=extract_number):
-            logger.debug("🎵 Processing: %s", audio_file.name)
+            logger.info("🎵 Extracting features | genre=%s | file=%s", GenreType.get_name(genre), audio_file.name)
 
             try:
                 y, sr = librosa.load(str(audio_file), sr=SAMPLE_RATE, mono=True)
