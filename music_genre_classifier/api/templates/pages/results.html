@@ -46,38 +46,52 @@
         </section>
 
         <!-- MÉTRICAS -->
-        <section>
-            <h3>📊 Métricas de Avaliação</h3>
+        <section style="text-align: justify;">
+            <h3 style="text-align: center;">📊 Métricas de Avaliação</h3>
 
-            <!-- TEXTO EXPLICATIVO -->
             <p>
-                Para avaliar o desempenho do modelo, utilizamos três métricas principais por classe: <strong>Precision,
-                    Recall e F1-score</strong>. A <strong>Precision</strong> mede a proporção de predições corretas
-                dentro de todas as amostras que o modelo classificou como uma determinada classe. Por exemplo, se o
-                modelo classifica 10 músicas como POP e 8 estão corretas, a Precision será 80%. Essa métrica é
-                importante quando queremos minimizar falsos positivos, ou seja, garantir que o modelo acerte quando
-                afirma que uma música pertence a um gênero.
+                O desempenho do classificador foi avaliado por meio das métricas
+                <strong>Accuracy</strong>, <strong>Precision</strong>, <strong>Recall</strong> e
+                <strong>F1-score</strong>. A <strong>Accuracy global</strong> do modelo foi de
+                <strong>90.00%</strong>, indicando que nove em cada dez músicas foram corretamente
+                classificadas quanto ao seu gênero musical.
             </p>
+
             <p>
-                A <strong>Recall</strong> mede a capacidade do modelo de encontrar todas as amostras de uma classe
-                específica. Ou seja, de todas as músicas que realmente são de um gênero, quantas o modelo conseguiu
-                identificar corretamente. Um Recall alto indica que o modelo não está “perdendo” muitas amostras de um
-                gênero, mesmo que isso ocasione alguns erros de classificação em outros gêneros. Essa métrica é crítica
-                quando queremos reduzir falsos negativos, garantindo que cada gênero seja bem representado nas
-                predições.
+                A <strong>Precision</strong> mede a proporção de classificações corretas entre todas as
+                amostras atribuídas a uma determinada classe. Por exemplo, quando o modelo prediz que uma
+                música pertence ao gênero POP, a Precision indica a probabilidade dessa predição estar correta.
+                Essa métrica é especialmente importante para reduzir falsos positivos, garantindo que o modelo
+                não classifique incorretamente músicas de outros gêneros como pertencentes a uma classe específica.
             </p>
+
             <p>
-                O <strong>F1-score</strong> combina Precision e Recall em uma única métrica harmônica, oferecendo uma
-                visão balanceada do desempenho do modelo. Ele é particularmente útil quando há classes desbalanceadas,
-                como no nosso conjunto de gêneros musicais, permitindo comparar o desempenho de classes mais ou menos
-                frequentes de forma justa. No nosso modelo, gêneros como CLASSICA e FORRO alcançaram F1-scores acima de
-                92%, mostrando alta acurácia e boa cobertura, enquanto gêneros como POP e ROCK tiveram valores
-                ligeiramente menores, refletindo que o modelo confunde algumas amostras entre esses gêneros mais
-                próximos.
+                A <strong>Recall</strong> avalia a capacidade do modelo em identificar corretamente todas as
+                músicas de um determinado gênero. Em outras palavras, mede quantas amostras reais de uma classe
+                foram corretamente reconhecidas pelo classificador. Valores elevados de Recall indicam que o
+                modelo apresenta boa sensibilidade para detectar os diferentes gêneros musicais, evitando a perda
+                de amostras relevantes durante a classificação.
+            </p>
+
+            <p>
+                O <strong>F1-score</strong> combina Precision e Recall em uma média harmônica, fornecendo uma
+                medida balanceada do desempenho do modelo. Essa métrica é particularmente útil em cenários com
+                possíveis desbalanceamentos entre classes, como ocorre em conjuntos de dados musicais.
+                No modelo treinado, gêneros como <strong>CLÁSSICA</strong> e <strong>FORRÓ</strong> apresentaram
+                F1-scores superiores a <strong>98%</strong>, evidenciando alta capacidade de discriminação.
+                Já gêneros como <strong>POP</strong> e <strong>ROCK</strong> obtiveram valores ligeiramente
+                inferiores, refletindo a maior similaridade acústica entre esses estilos musicais.
+            </p>
+
+            <p>
+                De forma geral, os resultados demonstram que a rede neural MLP foi capaz de aprender padrões
+                relevantes a partir das características extraídas dos sinais de áudio, alcançando um bom
+                equilíbrio entre generalização e precisão, o que valida sua aplicação na tarefa de
+                classificação automática de gêneros musicais.
             </p>
 
             <!-- GRÁFICOS -->
-            <div class="metrics-grid">
+            <div class="metrics-grid" style="text-align: center;">
 
                 <div>
                     <h4>Precision</h4>
