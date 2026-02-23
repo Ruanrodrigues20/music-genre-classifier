@@ -103,6 +103,7 @@ Configuração atual (mantida consistente entre `MLPConfig` e `model_config.json
   "random_state": 42,
   "batch_size": 32
 }
+```
 
 ## Requisitos
 
