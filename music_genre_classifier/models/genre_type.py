@@ -2,20 +2,20 @@ from enum import Enum
 
 
 class GenreType(Enum):
-    POP = "pop"
-    ROCK = "rock"
-    ELETRONICA = "eletronica"
-    CLASSICA = "classica"
-    FORRO = "forro"
+    POP = 0
+    ROCK = 1
+    ELETRONICA = 2
+    CLASSICA = 3
+    FORRO = 4
 
     @staticmethod
     def to_label(genre):
-        return list(GenreType).index(genre)
+        return genre.value
 
     @staticmethod
     def from_label(label):
-        return list(GenreType)[label]
+        return GenreType(label)
 
     @staticmethod
     def get_name(label):
-        return list(GenreType)[label].value
+        return GenreType(label).name.lower()

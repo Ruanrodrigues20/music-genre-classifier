@@ -5,8 +5,8 @@ DATASET_DIR = PROJECT_ROOT / "dataset"
 DATA_DIR = PROJECT_ROOT / "data"
 RESULTS_DIR = PROJECT_ROOT / "results"
 MODEL_PATH = DATA_DIR / "model.joblib"
-TRAIN_CSV = DATA_DIR / "train.csv"
-TEST_CSV = DATA_DIR / "test.csv"
+DATASET_CSV = DATA_DIR / "dataset.csv"
+MODEL_CONFIG = DATA_DIR / "model_config.json"
 
 
 if not DATA_DIR.exists():

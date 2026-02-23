@@ -5,140 +5,165 @@
 {% block content %}
 
 <main>
+  <article class="article">
 
-    <article class="article">
+    <!-- HERO -->
+    <header class="hero">
+      <h2>Music Genre Classifier</h2>
+      <p class="meta">
+        Projeto desenvolvido na disciplina de
+        <strong>Inteligência Artificial</strong> —
+        <strong>UFCG · 2025.2</strong>
+      </p>
+      <p class="hero-description">
+        Sistema de classificação de gêneros musicais baseado em <strong>Machine Learning</strong>,
+        com pipeline completo: construção do dataset, pré-processamento, extração de features,
+        treinamento, avaliação e inferência via aplicação web.
+      </p>
+    </header>
 
-        <!-- HERO -->
-        <header class="hero">
-            <h2>Music Genre Classifier</h2>
-            <p class="meta">
-                Projeto desenvolvido na disciplina de
-                <strong>Inteligência Artificial</strong> —
-                <strong>UFCG · 2025.2</strong>
-            </p>
-            <p class="hero-description">
-                Um sistema completo de classificação de gêneros musicais
-                utilizando técnicas de <strong>Machine Learning</strong>,
-                com pipeline própria de dados e integração web.
-            </p>
-        </header>
+    <!-- CONTEXTO -->
+    <section>
+      <h3>Contexto</h3>
+      <p>
+        O objetivo do projeto é aplicar aprendizado supervisionado para resolver um problema real:
+        <strong>identificar automaticamente o gênero musical</strong> a partir de uma faixa de áudio.
+      </p>
+      <p>
+        A solução foi implementada de ponta a ponta, incluindo pré-processamento do dataset,
+        engenharia de features acústicas, treinamento de uma MLP e avaliação com métricas multiclasses.
+      </p>
+    </section>
 
-        <!-- CONTEXTO -->
-        <section>
-            <h3>📚 Contexto do Projeto</h3>
-            <p>
-                O objetivo deste trabalho foi aplicar técnicas de aprendizado supervisionado
-                para resolver um problema real: <strong>identificar automaticamente o gênero musical
-                    de uma faixa de áudio</strong>.
-            </p>
-            <p>
-                A pipeline foi construída do zero, incluindo coleta de dados,
-                pré-processamento, engenharia de features, treinamento,
-                avaliação e deploy do modelo.
-            </p>
-        </section>
+    <!-- DATASET -->
+    <section>
+      <h3>Dataset</h3>
+      <p>
+        Optamos por construir um dataset próprio, organizado por classe, contendo os gêneros:
+        <strong>pop, rock, eletrônica, clássica e forró</strong>.
+      </p>
+      <p>
+        Cada faixa é padronizada antes do treinamento:
+      </p>
+      <ul>
+        <li>Conversão para <strong>.wav</strong></li>
+        <li>Padronização de taxa de amostragem (<strong>22050 Hz</strong>)</li>
+        <li>Extração de aproximadamente <strong>30s</strong> por música (5 segmentos de 6s)</li>
+        <li>Organização por diretórios e renomeação por classe</li>
+      </ul>
+    </section>
 
-        <!-- DATASET -->
-        <section>
-            <h3>🎧 Construção do Dataset</h3>
-            <p>
-                Ao invés de utilizar bases tradicionais como GTZAN, optamos por
-                construir um dataset próprio, coletando manualmente músicas
-                de diferentes gêneros.
-            </p>
-            <p>
-                Cada faixa passou por:
-            </p>
-            <ul>
-                <li>Padronização de duração</li>
-                <li>Conversão de formato</li>
-                <li>Normalização do sinal</li>
-                <li>Organização estruturada por classe</li>
-            </ul>
-        </section>
+    <!-- FEATURES -->
+    <section>
+      <h3>Extração de Features</h3>
+      <p>
+        As features são extraídas com <strong>Librosa</strong> e agregadas em um vetor de dimensão fixa
+        (média e variância por feature, quando aplicável). O áudio também passa por
+        <strong>normalização</strong> para reduzir variações de volume entre faixas.
+      </p>
 
-        <!-- FEATURES -->
-        <section>
-            <h3>🔎 Extração de Features</h3>
-            <p>
-                Utilizamos a biblioteca <strong>Librosa</strong> para extrair
-                características representativas do domínio espectral e temporal.
-            </p>
+      <div class="metrics-grid">
+        <div>
+          <h4>Principais grupos de features</h4>
+          <ul>
+            <li>MFCC (20) + deltas (Δ e Δ²)</li>
+            <li>Chroma STFT e Chroma CQT</li>
+            <li>Log-Mel Spectrogram (40 bandas)</li>
+            <li>Centroid, Bandwidth, Rolloff, ZCR e RMS</li>
+          </ul>
+        </div>
 
-            <div class="metrics-grid">
-                <div>
-                    <ul>
-                        <li>MFCC</li>
-                        <li>Chroma Features</li>
-                        <li>Spectral Centroid</li>
-                    </ul>
-                </div>
+        <div>
+          <h4>Ritmo, textura e harmonia</h4>
+          <ul>
+            <li>Tempo (BPM), Onset Strength e Pulse Clarity</li>
+            <li>Spectral Contrast e Spectral Flatness</li>
+            <li>Tonnetz (relações harmônicas)</li>
+            <li>Crest Factor e RMS Delta (dinâmica)</li>
+          </ul>
+        </div>
+      </div>
 
-                <div>
-                    <ul>
-                        <li>Spectral Bandwidth</li>
-                        <li>Zero Crossing Rate</li>
-                        <li>RMS Energy</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+      <p>
+        O objetivo é capturar informações de timbre, energia, ritmo e harmonia, permitindo que o modelo diferencie
+        gêneros com características bem definidas e também os casos de maior sobreposição.
+      </p>
+    </section>
 
-        <!-- MODELO -->
-        <section>
-            <h3>🧠 Modelo de Machine Learning</h3>
-            <p>
-                Foi utilizada uma <strong>MLP (Multi-Layer Perceptron)</strong>
-                implementada com <strong>Scikit-learn</strong>,
-                avaliando desempenho através de múltiplas métricas.
-            </p>
+    <!-- MODELO -->
+    <section>
+      <h3>Modelo</h3>
+      <p>
+        O classificador utiliza uma <strong>MLP (Multi-Layer Perceptron)</strong> com <strong>Scikit-learn</strong>.
+        As features são normalizadas com <strong>StandardScaler</strong> e o treinamento utiliza
+        <strong>early stopping</strong> com validação interna.
+      </p>
 
-            <div class="metrics-grid">
-                <div>
-                    <ul>
-                        <li>Accuracy</li>
-                        <li>Precision</li>
-                        <li>Recall</li>
-                    </ul>
-                </div>
-                <div>
-                    <ul>
-                        <li>F1-score</li>
-                        <li>Matriz de Confusão</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+      <p>
+        Configuração principal do modelo:
+      </p>
+      <ul>
+        <li>Arquitetura: <strong>(128, 64)</strong></li>
+        <li>Ativação: <strong>ReLU</strong></li>
+        <li>Otimizador: <strong>Adam</strong></li>
+        <li>Regularização (L2): <strong>alpha = 0.02</strong></li>
+        <li>Máximo de iterações: <strong>800</strong></li>
+      </ul>
+    </section>
 
-        <!-- INTEGRAÇÃO -->
-        <section>
-            <h3>🌐 Integração Web</h3>
-            <p>
-                O modelo treinado foi integrado a uma aplicação web,
-                permitindo que usuários façam upload de arquivos de áudio
-                e obtenham predições em tempo real.
-            </p>
-            <p>
-                A aplicação conecta frontend, backend e modelo treinado
-                de forma modular e escalável.
-            </p>
-        </section>
+    <!-- AVALIAÇÃO -->
+    <section>
+      <h3>Avaliação</h3>
+      <p>
+        O desempenho é avaliado com divisão estratificada (train/test) e métricas por classe.
+        Além da acurácia, também analisamos métricas que equilibram desempenho entre classes.
+      </p>
 
-        <!-- CONTRIBUIDORES -->
-        <section>
-            <h3>👥 Equipe</h3>
+      <div class="metrics-grid">
+        <div>
+          <ul>
+            <li>Accuracy</li>
+            <li>Macro F1</li>
+            <li>Matriz de Confusão</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>Precision por classe</li>
+            <li>Recall por classe</li>
+            <li>F1-score por classe</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-            <div class="team-grid">
-                <a href="https://github.com/arthur-vasco7" target="_blank" class="team-card">Arthur</a>
-                <a href="https://github.com/CarlosArturr" target="_blank" class="team-card">Carlos Artur</a>
-                <a href="https://github.com/DeboraSabrinaOPereira" target="_blank" class="team-card">Débora Pereira</a>
-                <a href="https://github.com/rafaelmcavalcante" target="_blank" class="team-card">Rafael Cavalcante</a>
-                <a href="https://github.com/ruanrodrigues20" target="_blank" class="team-card">Ruan Rodrigues</a>
-            </div>
-        </section>
+    <!-- INTEGRAÇÃO -->
+    <section>
+      <h3>Aplicação Web</h3>
+      <p>
+        O modelo treinado é integrado a uma aplicação web com <strong>FastAPI</strong>, permitindo:
+      </p>
+      <ul>
+        <li>Upload de áudio pelo navegador</li>
+        <li>Inferência via endpoint <strong>/predict</strong></li>
+        <li>Visualização de gráficos e resultados em <strong>/results</strong></li>
+      </ul>
+    </section>
 
-    </article>
+    <!-- CONTRIBUIDORES -->
+    <section>
+      <h3>Equipe</h3>
 
+      <div class="team-grid">
+        <a href="https://github.com/arthur-vasco7" target="_blank" class="team-card">Arthur</a>
+        <a href="https://github.com/CarlosArturr" target="_blank" class="team-card">Carlos Artur</a>
+        <a href="https://github.com/DeboraSabrinaOPereira" target="_blank" class="team-card">Débora Pereira</a>
+        <a href="https://github.com/rafaelmcavalcante" target="_blank" class="team-card">Rafael Cavalcante</a>
+        <a href="https://github.com/ruanrodrigues20" target="_blank" class="team-card">Ruan Rodrigues</a>
+      </div>
+    </section>
+
+  </article>
 </main>
 
 {% endblock %}

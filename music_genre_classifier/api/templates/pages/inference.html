@@ -4,28 +4,40 @@
 
 {% block content %}
 <div class="container">
-    <div class="article">
+  <div class="article">
 
-        <h2>Classificação Automática de Gêneros Musicais</h2>
+    <h2>Inferência</h2>
 
-        <p>
-            Envie um arquivo de áudio para que o modelo de deep learning
-            analise seus padrões sonoros e determine o gênero musical.
-        </p>
+    <p>
+      Envie um arquivo de áudio para que o modelo de <strong>Machine Learning</strong>
+      classifique o gênero musical. O classificador utiliza uma
+      <strong>MLP (Multi-Layer Perceptron)</strong> treinada com features extraídas via
+      <strong>Librosa</strong>.
+    </p>
 
-        <form id="uploadForm">
-            <div class="upload-box" id="uploadBox">
-                <p>Clique ou arraste seu áudio aqui</p>
-                <input type="file" id="fileInput" accept="audio/*" required>
-                <div class="file-name" id="fileName"></div>
-            </div>
+    <p>
+      Formatos recomendados: <strong>.wav</strong> ou <strong>.mp3</strong>.
+      Quanto maior a qualidade do áudio, melhor a predição.
+    </p>
 
-            <button type="submit">Classificar</button>
-        </form>
+    <form id="uploadForm">
+      <div class="upload-box" id="uploadBox">
+        <p>Clique ou arraste seu áudio aqui</p>
+        <input type="file" id="fileInput" accept="audio/*" required>
+        <div class="file-name" id="fileName"></div>
+      </div>
 
-        <div id="result"></div>
+      <button type="submit">Classificar</button>
+    </form>
 
-    </div>
+    <div id="result"></div>
+
+    <p style="margin-top: 18px; font-size: 14px; color: var(--muted);">
+      Observação: o resultado é uma previsão do modelo e pode variar dependendo de mixagem,
+      ruídos e características do áudio.
+    </p>
+
+  </div>
 </div>
 {% endblock %}
 

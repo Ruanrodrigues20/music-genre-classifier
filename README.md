@@ -1,53 +1,110 @@
-# 🎵 Music Genre Classifier
+# Music Genre Classifier
 
-Trabalho desenvolvido na disciplina de **Inteligência Artificial** — **UFCG — 2025.2**
-
----
-
-## 👥 Contribuidores
-
-* [Arthur](https://github.com/arthur-vasco7)
-* [Carlos Artur](https://github.com/CarlosArturr)
-* [Débora Pereira](https://github.com/DeboraSabrinaOPereira)
-* [Rafael Cavalcante](https://github.com/rafaelmcavalcante)
-* [Ruan Rodrigues](https://github.com/ruanrodrigues20)
+Projeto desenvolvido na disciplina de **Inteligência Artificial** — **UFCG (2025.2)**.  
+O sistema realiza **classificação automática de gêneros musicais** a partir de áudios, com pipeline completo: construção de dataset, pré-processamento, extração de features e treinamento.
 
 ---
 
-## 🧪 Etapas do Projeto
+## Contribuidores
 
-1. Coleta dos dados de treinamento (PalcoMP3)
-2. Criação dos testes com TDD
-3. Extração de features das músicas
-4. Implementação da MLP (Multi-Layer Perceptron)
-5. Execução e validação dos testes
-
----
-
-## 🎼 Features Extraídas
-
-O pipeline de pré-processamento extrai as seguintes **features de áudio** usando `librosa`:
-
-| Feature | O que Captura | Por que é útil |
-|---------|---------------|----------------|
-| **MFCC (mean/var)** | Timbre | Diferencia instrumentos e estilo de produção |
-| **MFCC delta / delta²** | Mudança temporal do timbre | Captura movimentos e articulação do som |
-| **Chroma STFT (mean/var)** | Notas / acordes | Identifica harmonia e progressão de acordes |
-| **Spectral Centroid (mean/var)** | Brilho do som | Diferencia instrumentos ou gêneros mais agudos |
-| **Spectral Bandwidth (mean/var)** | Largura espectral | Mede complexidade tonal |
-| **Spectral Rolloff (mean/var)** | Frequência abaixo da qual X% da energia está | Destaca percussão e agudos |
-| **Zero-Crossing Rate (ZCR)** | Número de vezes que o sinal cruza zero | Captura atividade ou ruído do som |
-| **Root Mean Square (RMS) Energy** | Energia média | Mede volume e dinâmica |
-| **Log-Mel Spectrogram** | Padrões de frequência perceptuais | Captura timbre e ritmo de forma detalhada |
-| **Harmonic / Percussive RMS** | Energia separada em harmonia e percussão | Diferencia melodia e ritmo |
-| **Spectral Contrast** | Diferença entre picos e vales do espectro | Captura riqueza tonal e dinâmica |
-| **Tonnetz** | Relações harmônicas entre notas | Diferencia progressões de acordes por gênero |
-
-> Essas features permitem que a MLP capture tanto o conteúdo harmônico e rítmico quanto o timbre e a textura do áudio, ajudando na classificação de gêneros musicais.
+- [Arthur](https://github.com/arthur-vasco7)
+- [Carlos Artur](https://github.com/CarlosArturr)
+- [Débora Pereira](https://github.com/DeboraSabrinaOPereira)
+- [Rafael Cavalcante](https://github.com/rafaelmcavalcante)
+- [Ruan Rodrigues](https://github.com/ruanrodrigues20)
 
 ---
 
-## ⚙️ Requisitos
+## Objetivo
+
+Construir um **classificador de gêneros musicais** com foco em:
+
+- engenharia de features acústicas com **Librosa**;
+- treinamento de uma **MLP (Multi-Layer Perceptron)** com **Scikit-learn**;
+- avaliação por métricas multiclasses: **Accuracy, Precision, Recall, F1-score e Macro F1**;
+
+Gêneros suportados: **POP, ROCK, ELETRÔNICA, CLÁSSICA e FORRÓ**.
+
+---
+
+## Visão Geral do Pipeline
+
+1. **Coleta e organização** das músicas (dataset próprio)
+2. **Pré-processamento**
+   - conversão/segmentação e padronização de duração (5 segmentos de 6s → ~30s)
+   - geração de `.wav` e renomeação por classe
+3. **Extração de features** (vetor fixo por música)
+4. **Treinamento da MLP** com normalização (`StandardScaler`)
+5. **Avaliação + geração de gráficos**
+6. **Inferência via Web/API** (upload de áudio → retorno do gênero)
+
+---
+
+## Pré-processamento do Dataset
+
+O pré-processamento é feito no módulo `music_genre_classifier.utils.Preprocess`:
+
+- Carrega arquivos `.mp3` por classe em `dataset/<genero>/`
+- Seleciona 5 trechos de 6 segundos ao longo da música (total ~30s)
+- Salva um novo arquivo `_30s.wav` e renomeia como `<genero><n>.wav`
+
+Parâmetros principais:
+
+- `SAMPLE_RATE = 22050`
+- `SEGMENT_DURATION = 6`
+- `NUM_SEGMENTS = 5`
+
+---
+
+## Extração de Features
+
+A extração de features é determinística e gera vetores de dimensão fixa.  
+As features são agregadas por **média e variância** (quando aplicável), garantindo consistência entre amostras.
+
+### Normalização
+O áudio é normalizado com `librosa.util.normalize(y)` para reduzir variações de volume/energia entre músicas.
+
+### Features utilizadas
+
+| Categoria | Features | Observação |
+|---------|----------|------------|
+| Timbre | MFCC (20) + Δ + Δ² | Base forte para caracterizar timbre e variação temporal |
+| Harmonia | Chroma STFT (12), Chroma CQT (12) | Caracteriza tonalidade e acordes |
+| Espectrais (básicas) | Centroid, Bandwidth, Rolloff, ZCR, RMS | Brilho, energia em altas frequências, percussividade |
+| Percepção humana | Log-Mel (40 bandas) | Captura energia por bandas perceptuais |
+| Ritmo/tempo | Tempo (BPM), Onset Strength, Pulse Clarity | Características de batida e pulso |
+| Textura/instrumentação | Spectral Contrast (7), Spectral Flatness | Distingue sons tonais vs ruidosos, contraste espectral |
+| Harmonia avançada | Tonnetz (6) | Relações harmônicas |
+| Dinâmica | Crest Factor, RMS Delta | Pico vs energia média e variação de energia |
+
+> A ordem e os nomes das colunas são mantidos em `FeatureExtractor.get_feature_names()` e são usados na geração do CSV.
+
+---
+
+## Modelo de Machine Learning
+
+Treinamento usando **MLPClassifier** (Scikit-learn), com `StandardScaler` aplicado às features.
+
+Configuração atual (mantida consistente entre `MLPConfig` e `model_config.json`):
+
+```json
+{
+  "hidden_layer_sizes": [128, 64],
+  "activation": "relu",
+  "solver": "adam",
+  "max_iter": 800,
+  "alpha": 0.02,
+  "learning_rate_init": 0.001,
+  "early_stopping": true,
+  "validation_fraction": 0.1,
+  "n_iter_no_change": 20,
+  "verbose": true,
+  "random_state": 42,
+  "batch_size": 32
+}
+```
+
+## Requisitos
 
 * **ffmpeg**
 
@@ -71,9 +128,9 @@ essa extração.
 
 ---
 
-## ▶️ Como Rodar
+## Como Rodar
 
-### 1️⃣ Ativar ambiente virtual
+### 1 - Ativar ambiente virtual
 
 ```bash
 uv venv
@@ -81,19 +138,19 @@ source .venv/bin/activate
 uv sync
 ```
 
-### 2️⃣ Pré-processar o dataset (somente se ainda não tiver feito)
+### 2 - Pré-processar o dataset (somente se ainda não tiver feito)
 
 ```bash
 python -m music_genre_classifier.data.preprocess
 ```
 
-### 3️⃣ Treinar a MLP
+### 3 - Treinar a MLP
 
 ```bash
 python -m music_genre_classifier.main
 ```
 
-### 4️⃣ Rodar a página web para testar
+### 4 -  Rodar a página web para testar
 
 ```bash
 uvicorn music_genre_classifier.api.app:app --reload
