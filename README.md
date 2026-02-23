@@ -22,7 +22,6 @@ Construir um **classificador de gêneros musicais** com foco em:
 - engenharia de features acústicas com **Librosa**;
 - treinamento de uma **MLP (Multi-Layer Perceptron)** com **Scikit-learn**;
 - avaliação por métricas multiclasses: **Accuracy, Precision, Recall, F1-score e Macro F1**;
-- integração com **API FastAPI** e interface web para inferência.
 
 Gêneros suportados: **POP, ROCK, ELETRÔNICA, CLÁSSICA e FORRÓ**.
 
