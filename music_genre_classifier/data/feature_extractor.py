@@ -6,7 +6,6 @@ from music_genre_classifier.configs import get_logger, SAMPLE_RATE
 
 logger = get_logger(__name__)
 
-
 class FeatureExtractor:
     N_MFCC = 20
     N_MELS = 40
@@ -39,21 +38,19 @@ class FeatureExtractor:
             chroma = librosa.feature.chroma_stft(y=y, sr=sr)
             chroma_cqt = librosa.feature.chroma_cqt(y=y, sr=sr)
 
-            centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
-            bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
-            rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
-            zcr = librosa.feature.zero_crossing_rate(y)
-            rms = librosa.feature.rms(y=y)
+            centroid = librosa.feature.spectral_centroid(y=y, sr=sr)     
+            bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)   
+            rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)       
+            zcr = librosa.feature.zero_crossing_rate(y)                  
+            rms = librosa.feature.rms(y=y)                               
 
-            mel = librosa.feature.melspectrogram(
-                y=y, sr=sr, n_mels=FeatureExtractor.N_MELS
-            )
+            mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=FeatureExtractor.N_MELS)
             log_mel = librosa.power_to_db(mel, ref=np.max)
 
-            tempo = librosa.feature.tempo(y=y, sr=sr)
+            tempo = librosa.beat.tempo(y=y, sr=sr)
             tempo_bpm = float(tempo[0]) if tempo is not None and len(tempo) > 0 else 0.0
 
-            onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+            onset_env = librosa.onset.onset_strength(y=y, sr=sr)         
             onset_env_2d = onset_env.reshape(1, -1)
 
             max_size = min(200, len(onset_env))
@@ -67,14 +64,14 @@ class FeatureExtractor:
             else:
                 pulse_clarity = 0.0
 
-            spec_contrast = librosa.feature.spectral_contrast(y=y, sr=sr)
-            flatness = librosa.feature.spectral_flatness(y=y)
+            spec_contrast = librosa.feature.spectral_contrast(y=y, sr=sr)  
+            flatness = librosa.feature.spectral_flatness(y=y)              
 
             y_harm = librosa.effects.harmonic(y)
-            tonnetz = librosa.feature.tonnetz(y=y_harm, sr=sr)
+            tonnetz = librosa.feature.tonnetz(y=y_harm, sr=sr)             
 
             peak = float(np.max(np.abs(y))) + FeatureExtractor.EPS
-            rms_scalar = float(np.sqrt(np.mean(y**2))) + FeatureExtractor.EPS
+            rms_scalar = float(np.sqrt(np.mean(y ** 2))) + FeatureExtractor.EPS
             crest_factor = float(peak / rms_scalar)
 
             rms_delta = np.diff(rms, axis=1)
@@ -87,20 +84,26 @@ class FeatureExtractor:
                     *stats(mfcc),
                     *stats(mfcc_delta),
                     *stats(mfcc_delta2),
+
                     *stats(chroma),
                     *stats(chroma_cqt),
+
                     *stats(centroid),
                     *stats(bandwidth),
                     *stats(rolloff),
                     *stats(zcr),
                     *stats(rms),
+
                     *stats(log_mel),
+
                     np.array([tempo_bpm], dtype=np.float32),
                     *stats(onset_env_2d),
                     np.array([pulse_clarity], dtype=np.float32),
+
                     *stats(spec_contrast),
                     *stats(flatness),
                     *stats(tonnetz),
+
                     np.array([crest_factor], dtype=np.float32),
                     *stats(rms_delta),
                 ]
