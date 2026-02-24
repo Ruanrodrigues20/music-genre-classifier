@@ -5,7 +5,7 @@ import json
 
 
 from music_genre_classifier.data import AudioLoader, DataSetLoader, FeatureExtractor
-from music_genre_classifier.utils import Preprocess
+from music_genre_classifier.data import Preprocess
 from music_genre_classifier.mlp import (
     MLPClassifier,
     ClassificationMetrics,
