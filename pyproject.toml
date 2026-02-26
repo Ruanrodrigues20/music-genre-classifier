@@ -15,11 +15,21 @@ dependencies = [
     "python-multipart>=0.0.22",
     "soundfile>=0.13.1",
     "uvicorn>=0.40.0",
+    "coverage==7.13.4",
+    "iniconfig==2.3.0",
+    "pluggy==1.6.0",
+    "pygments==2.19.2",
+    "pytest==9.0.2",
+    "pytest-cov==7.0.0"
 ]
-
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "--cov=music_genre_classifier --cov-report=term-missing"
