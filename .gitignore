@@ -11,4 +11,5 @@ wheels/
 *.wav
 *.zip
 *.wav
+!tests/integration/assets/sample.wav
 dataset
