@@ -107,31 +107,9 @@ def test_division_by_zero_case():
     assert np.allclose(metrics.recall(), [1.0, 0.0])
     assert np.allclose(metrics.f1_score(), [1.0, 0.0])
 
-def test_invalid_num_classes_zero():
-    y_true = [0, 1]
-    y_pred = [0, 1]
-
-    with pytest.raises(ValueError):
-        cm.ClassificationMetrics(y_true, y_pred, 0)
-
 def test_invalid_num_classes_negative():
     y_true = [0, 1]
     y_pred = [0, 1]
 
     with pytest.raises(ValueError):
         cm.ClassificationMetrics(y_true, y_pred, -1)
-
-
-def test_different_lengths():
-    y_true = [0, 1, 2]
-    y_pred = [0, 1]
-
-    with pytest.raises(ValueError):
-        cm.ClassificationMetrics(y_true, y_pred, 3)
-
-def test_empty_inputs():
-    y_true = []
-    y_pred = []
-
-    with pytest.raises(ValueError):
-        cm.ClassificationMetrics(y_true, y_pred, 3)

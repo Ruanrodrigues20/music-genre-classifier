@@ -123,7 +123,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 * **Python 3.12.x**
-* Dataset disponível (caso a MLP ainda não tenha sido treinada), ou usar os CSV de test e train, feitos para adiantar
+* Dataset disponível (caso a MLP ainda não tenha sido treinada), ou usar o dataset.csv, feitos para adiantar
 essa extração.
 
 ---
