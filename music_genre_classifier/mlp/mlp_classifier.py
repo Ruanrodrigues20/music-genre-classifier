@@ -1,9 +1,10 @@
-import joblib
+from dataclasses import asdict
 
+import joblib
 from sklearn.neural_network import MLPClassifier as SklearnMLP
 from sklearn.preprocessing import StandardScaler
+
 from music_genre_classifier.models import MLPConfig
-from dataclasses import asdict
 
 
 class MLPClassifier:

@@ -1,5 +1,7 @@
-import numpy as np
 from dataclasses import dataclass
+
+import numpy as np
+
 from music_genre_classifier.models.genre_type import GenreType
 
 

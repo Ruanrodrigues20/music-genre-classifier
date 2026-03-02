@@ -1,10 +1,11 @@
-import os
+import tempfile
+from unittest.mock import MagicMock, patch
+
 import numpy as np
 import pytest
-import tempfile
-from unittest.mock import MagicMock
 
 from music_genre_classifier.services.mlp_service import MLPClassifier
+
 
 def test_init_requires_model_or_config():
     with pytest.raises(ValueError):
@@ -110,8 +111,6 @@ def test_save_creates_file():
             },
             file_path,
         )
-
-from unittest.mock import patch
 
 def test_load_restores_model():
     mock_model = MagicMock()

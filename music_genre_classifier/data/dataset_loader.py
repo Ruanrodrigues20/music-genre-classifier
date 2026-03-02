@@ -1,11 +1,11 @@
 import csv
-import pandas as pd
-
 from pathlib import Path
 
-from music_genre_classifier.models import AudioSample, GenreType
-from music_genre_classifier.configs import get_logger, DATASET_CSV
+import pandas as pd
+
+from music_genre_classifier.configs import DATASET_CSV, get_logger
 from music_genre_classifier.data.feature_extractor import FeatureExtractor
+from music_genre_classifier.models import AudioSample, GenreType
 
 logger = get_logger(__name__)
 

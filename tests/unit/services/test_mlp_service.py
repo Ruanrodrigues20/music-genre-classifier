@@ -1,9 +1,9 @@
-import numpy as np
-import pytest
 import json
 
-from music_genre_classifier.models import GenreType, MLPConfig
+import numpy as np
+import pytest
 
+from music_genre_classifier.models import GenreType, MLPConfig
 
 # =========================================================
 # FIXTURES
@@ -320,8 +320,8 @@ def test_preprocess_calls_run_for_all_genres(mocker):
         return_value=preprocess_instance,
     )
 
-    from music_genre_classifier.services.mlp_service import MlpService
     from music_genre_classifier.models import GenreType
+    from music_genre_classifier.services.mlp_service import MlpService
 
     service = MlpService()
     service.preprocess()

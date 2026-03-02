@@ -1,5 +1,7 @@
 import pytest
+
 from music_genre_classifier.models.genre_type import GenreType
+
 
 def test_enum_values():
     assert GenreType.POP.value == 0

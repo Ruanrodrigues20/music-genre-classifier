@@ -1,8 +1,7 @@
 import shutil
-import pytest
 
-from music_genre_classifier.services.mlp_service import MlpService
 from music_genre_classifier.models import GenreType
+from music_genre_classifier.services.mlp_service import MlpService
 
 
 def test_mlp_service_predict_with_pretrained_model(tmp_path, mocker):

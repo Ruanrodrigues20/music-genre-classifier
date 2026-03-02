@@ -1,14 +1,14 @@
-from fastapi import FastAPI, UploadFile, File, Request, Depends, HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from music_genre_classifier.services import MlpService
-from music_genre_classifier.configs import RESULTS_DIR
-from music_genre_classifier.api.dto.predict_response import PredictResponse
+from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
+from music_genre_classifier.api.dto.predict_response import PredictResponse
+from music_genre_classifier.configs import RESULTS_DIR
+from music_genre_classifier.services import MlpService
 
 BASE_DIR = Path(__file__).resolve().parent
 

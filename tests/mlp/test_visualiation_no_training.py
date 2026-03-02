@@ -1,4 +1,5 @@
 from unittest.mock import patch
+
 from music_genre_classifier.mlp.visualiation import ClassificationVisualizer
 
 

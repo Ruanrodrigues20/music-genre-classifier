@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import numpy as np
 import pytest
-from pathlib import Path
 
 # =========================================================
 # FIXTURES
@@ -101,7 +102,7 @@ def test_extract_30s_audio_creates_30s_file(mocker, preprocess, fake_audio):
         "music_genre_classifier.data.preprocess.librosa.get_duration",
         return_value=40,
     )
-    
+
     # Mockamos o sf.write para não gerar arquivos reais no disco durante este teste
     write_mock = mocker.patch("music_genre_classifier.data.preprocess.sf.write")
 
@@ -166,7 +167,7 @@ def test_rename_renames_files_in_order(preprocess):
     # Logo: a_30s.wav -> rock0.wav | b_30s.wav -> rock1.wav
     assert (preprocess.music_dir / "rock0.wav").exists()
     assert (preprocess.music_dir / "rock1.wav").exists()
-    
+
     # Verifica que os nomes antigos não existem mais
     assert not f1.exists()
 

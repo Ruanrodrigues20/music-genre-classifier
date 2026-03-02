@@ -1,21 +1,15 @@
 import json
 
-from music_genre_classifier.data import (
-    AudioLoader, 
-    DataSetLoader, 
-    FeatureExtractor, 
-    Preprocess)
+from sklearn.model_selection import train_test_split
+
+from music_genre_classifier.configs import DATASET_CSV, MODEL_CONFIG, MODEL_PATH
+from music_genre_classifier.data import AudioLoader, DataSetLoader, FeatureExtractor, Preprocess
 from music_genre_classifier.mlp import (
-    MLPClassifier,
     ClassificationMetrics,
     ClassificationVisualizer,
+    MLPClassifier,
 )
-from music_genre_classifier.configs import (
-    MODEL_PATH,
-    MODEL_CONFIG,
-    DATASET_CSV)
 from music_genre_classifier.models import GenreType, MLPConfig
-from sklearn.model_selection import train_test_split
 
 
 class MlpService:

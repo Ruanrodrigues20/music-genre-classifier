@@ -1,14 +1,15 @@
 from pathlib import Path
+
 import librosa
 import numpy as np
 import soundfile as sf
 
 from music_genre_classifier.configs import (
-    get_logger,
     DATASET_DIR,
-    SAMPLE_RATE,
     NUM_SEGMENTS,
+    SAMPLE_RATE,
     SEGMENT_DURATION,
+    get_logger,
 )
 
 logger = get_logger(__name__)

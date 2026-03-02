@@ -1,6 +1,8 @@
-import pytest
 import numpy as np
+import pytest
+
 from music_genre_classifier.data.feature_extractor import FeatureExtractor
+
 
 def test_feature_names_matches_extraction_size():
     """
@@ -11,10 +13,10 @@ def test_feature_names_matches_extraction_size():
     """
     sr = 22050
     y = np.random.uniform(-1, 1, sr * 5).astype(np.float32)
-    
+
     features = FeatureExtractor.extract(y, sr)
     names = FeatureExtractor.get_feature_names()
-    
+
     assert features is not None
     assert len(features) == len(names), f"Vetor tem {len(features)} mas nomes tem {len(names)}"
 
@@ -27,7 +29,7 @@ def test_extract_returns_float32():
     sr = 22050
     y = np.random.uniform(-1, 1, sr * 3)
     features = FeatureExtractor.extract(y, sr)
-    
+
     assert features.dtype == np.float32
 
 def test_extract_short_audio_returns_none(caplog):
@@ -39,9 +41,9 @@ def test_extract_short_audio_returns_none(caplog):
     """
     sr = 22050
     y = np.zeros(sr - 1)
-    
+
     result = FeatureExtractor.extract(y, sr)
-    
+
     assert result is None
     assert "Áudio curto ou vazio" in caplog.text
 
@@ -56,9 +58,9 @@ def test_extract_silence_does_not_crash():
     """
     sr = 22050
     y = np.zeros(sr * 3)
-    
+
     features = FeatureExtractor.extract(y, sr)
-    
+
     assert features is not None
     assert not np.isnan(features).any(), "O vetor contém valores NaN!"
     assert not np.isinf(features).any(), "O vetor contém valores Infinitos!"
@@ -72,7 +74,7 @@ def test_stats_calculation():
     """
     data = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
     stats = FeatureExtractor._stats(data)
-    
+
     assert len(stats) == 2
     # Média de [1,2,3] é 2.0 | Variância é 0.66...
     assert np.isclose(stats[0][0], 2.0)
@@ -87,11 +89,11 @@ def test_extract_exception_handling(mocker, caplog):
     """
     sr = 22050
     y = np.random.uniform(-1, 1, sr * 2)
-    
+
     mocker.patch("librosa.util.normalize", side_effect=RuntimeError("Erro Matemático Forçado"))
-    
+
     result = FeatureExtractor.extract(y, sr)
-    
+
     assert result is None
     assert "Erro in extractor features" in caplog.text
 

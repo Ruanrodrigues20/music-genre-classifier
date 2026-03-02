@@ -1,21 +1,22 @@
-import pytest 
 import csv
-from pathlib import Path 
-from music_genre_classifier.data.dataset_loader import DataSetLoader 
-from music_genre_classifier.models import GenreType
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+import pytest
+
+from music_genre_classifier.data.dataset_loader import DataSetLoader
+from music_genre_classifier.models import GenreType
 
 # --- TESTES PARA save_to_csv ---
 
-def test_save_to_csv_with_empty_samples(tmp_path): 
+def test_save_to_csv_with_empty_samples(tmp_path):
     """
     Objetivo: Garantir que a função não crie um arquivo se a lista de amostras estiver vazia.
     Decisão: Se não há dados, não deve haver arquivo no disco.
     """
-    file_path = tmp_path / "dataset.csv" 
-    DataSetLoader.save_to_csv([], file_path) 
-    assert not file_path.exists() 
+    file_path = tmp_path / "dataset.csv"
+    DataSetLoader.save_to_csv([], file_path)
+    assert not file_path.exists()
 
 def test_save_to_csv_creates_parent_directory(tmp_path, mocker):
     """
@@ -106,7 +107,7 @@ def test_load_from_csv_returns_correct_shapes(tmp_path):
     pd.DataFrame(data).to_csv(file_path, index=False)
 
     X, y = DataSetLoader.load_from_csv(file_path)
-    
+
     # Com 2 amostras e 2 features, o shape deve ser (2, 2)
     assert X.shape == (2, 2)
     assert len(y) == 2
@@ -121,7 +122,7 @@ def test_load_from_csv_mapping_values(tmp_path):
     data = {
         "filename": ["track.wav"],
         "feature": [1.0],
-        "label": ["rock"] 
+        "label": ["rock"]
     }
     pd.DataFrame(data).to_csv(file_path, index=False)
 

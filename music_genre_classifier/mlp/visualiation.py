@@ -1,8 +1,9 @@
 import os
 
-import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.pyplot as plt
 import numpy as np
+
 from music_genre_classifier.configs import RESULTS_DIR
 from music_genre_classifier.mlp import MLPClassifier
 from music_genre_classifier.mlp.mlp_classifier import SklearnMLP

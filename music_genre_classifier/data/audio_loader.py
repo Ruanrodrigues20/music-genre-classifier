@@ -5,15 +5,15 @@ from typing import List
 import librosa
 import numpy as np
 
-from music_genre_classifier.models import AudioSample, GenreType
 from music_genre_classifier.configs import (
-    get_logger,
     DATASET_DIR,
-    SAMPLE_RATE,
     NUM_SEGMENTS,
+    SAMPLE_RATE,
     SEGMENT_DURATION,
+    get_logger,
 )
 from music_genre_classifier.data.feature_extractor import FeatureExtractor
+from music_genre_classifier.models import AudioSample, GenreType
 from music_genre_classifier.utils import extract_number
 
 logger = get_logger(__name__)
@@ -47,7 +47,8 @@ class AudioLoader:
         samples: List[AudioSample] = []
 
         for audio_file in sorted(genre_dir.glob("*.wav"), key=extract_number):
-            logger.info("🎵 Extracting features | genre=%s | file=%s", GenreType.get_name(genre), audio_file.name)
+            logger.info("🎵 Extracting features | genre=%s | file=%s",
+                         GenreType.get_name(genre), audio_file.name)
 
             try:
                 y, sr = librosa.load(str(audio_file), sr=SAMPLE_RATE, mono=True)
