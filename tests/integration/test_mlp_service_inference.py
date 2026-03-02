@@ -1,7 +1,8 @@
 import shutil
+import pytest
 
-from music_genre_classifier.models import GenreType
 from music_genre_classifier.services.mlp_service import MlpService
+from music_genre_classifier.models import GenreType
 
 
 def test_mlp_service_predict_with_pretrained_model(tmp_path, mocker):
@@ -57,3 +58,34 @@ def test_mlp_service_predict_with_pretrained_model(tmp_path, mocker):
     assert isinstance(genre, str)
     assert genre in {g.name.lower() for g in GenreType}
     print(f"\n🎧 Gênero previsto pelo modelo: {genre}")
+
+def test_predict_with_too_short_audio_raises_error(tmp_path, mocker):
+    shutil.copy("tests/integration/assets/model.joblib", tmp_path / "model.joblib")
+
+    mocker.patch(
+        "music_genre_classifier.services.mlp_service.MODEL_PATH",
+        tmp_path / "model.joblib",
+    )
+
+    service = MlpService()
+
+    with open("tests/integration/assets/too_short.wav", "rb") as f:
+        audio_bytes = f.read()
+
+    with pytest.raises(Exception):
+        service.predict_genre(audio_bytes)
+
+def test_predict_with_non_wav_file_raises_error(tmp_path, mocker):
+    shutil.copy("tests/integration/assets/model.joblib", tmp_path / "model.joblib")
+
+    mocker.patch(
+        "music_genre_classifier.services.mlp_service.MODEL_PATH",
+        tmp_path / "model.joblib",
+    )
+
+    service = MlpService()
+
+    fake_file = b"isso nao eh um wav"
+
+    with pytest.raises(Exception):
+        service.predict_genre(fake_file)
