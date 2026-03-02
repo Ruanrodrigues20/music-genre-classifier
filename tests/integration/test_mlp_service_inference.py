@@ -58,8 +58,11 @@ def test_mlp_service_predict_with_pretrained_model(tmp_path, mocker):
     assert isinstance(genre, str)
     assert genre in {g.name.lower() for g in GenreType}
     print(f"\n🎧 Gênero previsto pelo modelo: {genre}")
-
+    
 def test_predict_with_too_short_audio_raises_error(tmp_path, mocker):
+    import numpy as np
+    import soundfile as sf
+
     shutil.copy("tests/integration/assets/model.joblib", tmp_path / "model.joblib")
 
     mocker.patch(
@@ -69,7 +72,13 @@ def test_predict_with_too_short_audio_raises_error(tmp_path, mocker):
 
     service = MlpService()
 
-    with open("tests/integration/assets/too_short.wav", "rb") as f:
+    sr = 22050
+    y = np.zeros(int(sr * 0.01))
+
+    wav_path = tmp_path / "too_short.wav"
+    sf.write(wav_path, y, sr)
+
+    with open(wav_path, "rb") as f:
         audio_bytes = f.read()
 
     with pytest.raises(Exception):
